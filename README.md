@@ -1,84 +1,76 @@
-# Detailed Explanation for Research Paper
+TGA Data Analysis and Extrapolation Project
 
-Here's a comprehensive explanation of the methodology for your research paper, written for an audience unfamiliar with neural networks:
+This project provides a complete workflow for analyzing Thermogravimetric Analysis (TGA) data using machine learning. It loads experimental data, trains a predictive model, and uses that model to extrapolate TGA and DTG curves for unseen heating rates.
+Project Structure
 
-## Methodology: Predicting Thermogravimetric Analysis (TGA) Values Using Machine Learning
+The project is organized into modular Python scripts for clarity and maintainability:
 
-### Introduction
+    main.py: The main entry point to run the entire workflow.
 
-This study presents a novel approach to predict thermogravimetric analysis (TGA) values at arbitrary temperatures, including those not directly measured in laboratory experiments. Our methodology combines principles from materials science with advanced statistical learning techniques to create a reliable predictive model with quantified uncertainty.
+    config.py: A centralized configuration file for file paths, model parameters, and other settings. You must edit this file first.
 
-### Data Collection and Preparation
+    data_loader.py: Handles loading the raw TGA data from the Excel file, cleaning it, and standardizing the format.
 
-The experimental data consisted of paired temperature and TGA measurements collected under controlled laboratory conditions. These measurements represent the thermal decomposition behavior of the material under study. Prior to analysis, the data was:
+    model_trainer.py: Contains the logic for training the machine learning model (Random Forest), performing hyperparameter tuning with GridSearchCV, evaluating performance, and saving the best model and its parameters.
 
-1. Examined for outliers and measurement errors
-2. Split into training (70%), validation (15%), and testing (15%) sets
-3. Normalized using standardization techniques to ensure all values fall within comparable ranges, which improves the learning process
+    predictor.py: Contains functions to load a saved model, make predictions for new (unseen) heating rates, derive DTG curves, and save the results.
 
-### Predictive Modeling Approach
+    requirements.txt: Lists all the necessary Python packages for this project.
 
-#### Neural Network Architecture
+    outputs/: A directory that will be automatically created to store all generated files:
 
-We implemented a specialized form of artificial neural network - a mathematical model inspired by biological neural systems that can learn complex patterns from data. Our specific implementation includes:
+        best_random_forest_model.joblib: The saved, trained machine learning model.
 
-- A three-layer feedforward neural network with nonlinear activation functions
-- Input layer: Temperature values
-- Hidden layers: Mathematical transformations that capture complex relationships
-- Output layer: Predicted TGA values
-- Regularization techniques to prevent overfitting to the training data
+        best_hyperparameters.json: The optimal hyperparameters found during tuning.
 
-#### Monte Carlo Dropout for Uncertainty Quantification
+        extrapolated_tga_predictions.csv: The predicted TGA curves for the unseen heating rates.
 
-A critical scientific requirement is understanding the uncertainty in predictions. We employed Monte Carlo Dropout, a Bayesian approximation technique that:
+        derived_dtg_predictions.csv: The calculated DTG curves from the predictions.
 
-1. Introduces controlled randomness during both training and prediction phases
-2. Generates multiple predictions for each temperature input
-3. Calculates statistical measures (mean and standard deviation) from these predictions
-4. Constructs confidence intervals at user-specified confidence levels (e.g., 95%)
+How to Run
+1. Setup
 
-This approach allows us to report not just a single predicted value, but a range within which the true value is likely to fall with a specified probability.
+a. Clone the repository:
 
-### Model Training Process
+git clone https://github.com/sienkus/tga.git
+cd tga
 
-The model was trained using the following systematic approach:
+b. Create a virtual environment (Recommended):
 
-1. **Objective Function**: Mean Squared Error (MSE) minimization between predicted and actual TGA values
-2. **Optimization Algorithm**: Adaptive Moment Estimation (Adam), which efficiently navigates the complex mathematical landscape to find optimal model parameters
-3. **Early Stopping**: Training was automatically terminated when performance on the validation set stopped improving, preventing overfitting
-4. **Hyperparameter Tuning**: Key model parameters (learning rate, network size, dropout rate) were systematically optimized to maximize predictive accuracy
+python3 -m venv venv
+source venv/bin/activate  # On Windows, use `venv\Scripts\activate`
 
-### Validation and Performance Assessment
+c. Install dependencies:
+Make sure you have pip installed, then run:
 
-The model's performance was rigorously evaluated using:
+pip install -r requirements.txt
 
-1. **Root Mean Square Error (RMSE)**: Measures the average magnitude of prediction errors
-2. **Coefficient of Determination (R²)**: Quantifies the proportion of variance in TGA values explained by the model
-3. **Residual Analysis**: Systematic examination of prediction errors to ensure no patterns were left uncaptured
-4. **Confidence Interval Coverage**: Verification that the predicted confidence intervals contain the true values at the expected rate
+2. Configuration
 
-### Practical Application
+IMPORTANT: Before running the project, you must edit the config.py file.
 
-The trained model enables:
+Open config.py and update the EXCEL_FILE_PATH variable to the correct absolute or relative path of your TGA- empty fruit bunch - to Hassan (1).xlsx file.
 
-1. Prediction of TGA values at any temperature within the studied range
-2. Quantification of prediction uncertainty through confidence intervals
-3. Interpolation between experimental measurements, reducing the need for additional laboratory tests
-4. Potential extrapolation to temperatures outside the measured range (with appropriate caution regarding increased uncertainty)
+# In config.py
+EXCEL_FILE_PATH = '/path/to/your/TGA- empty fruit bunch - to Hassan (1).xlsx'
 
-### Visualization and Interpretation
+You can also adjust other settings in this file, such as the unseen heating rates or the number of bootstrap iterations.
+3. Execute the Workflow
 
-The results are presented through publication-quality visualizations that show:
+Once the setup and configuration are complete, run the main script from your terminal:
 
-1. Actual vs. predicted TGA values across the temperature range
-2. Confidence intervals that visually represent prediction uncertainty
-3. Residual analysis plots that validate model assumptions
-4. Performance metrics that quantify prediction accuracy
+python main.py
 
-These visualizations are designed to be interpretable by researchers without specialized knowledge of machine learning techniques.
+This command will execute the entire pipeline:
 
-### Conclusion
+    Load and preprocess the data.
 
-This methodology represents a rigorous scientific approach to predicting material properties, combining experimental data with advanced statistical techniques. The inclusion of uncertainty quantification through confidence intervals ensures that predictions are presented with appropriate scientific caution, acknowledging the limitations inherent in any predictive model.
+    Train the Random Forest model with hyperparameter tuning.
 
-The approach demonstrates how modern computational methods can complement traditional experimental techniques in materials science, potentially reducing the need for extensive laboratory testing while maintaining scientific rigor through careful validation and uncertainty quantification.
+    Save the best model and its parameters to the outputs/ directory.
+
+    Load the saved model to perform extrapolation for the unseen heating rates.
+
+    Save the final TGA and DTG predictions as CSV files in the outputs/ directory.
+
+After the script finishes, you can find all the generated results in the outputs folder.
