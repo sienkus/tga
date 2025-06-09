@@ -1,5 +1,5 @@
 {
-    "max_depth": null,
+    "max_depth": 20,
     "min_samples_leaf": 2,
     "n_estimators": 200
 }
