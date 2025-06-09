@@ -1,9 +1,3 @@
-# Detailed Explanation for Research Paper
-
-Here's a comprehensive explanation of the methodology for your research paper, written for an audience unfamiliar with neural networks:
-
-## Methodology: Predicting Thermogravimetric Analysis (TGA) Values Using Machine Learning
-
 ### Introduction
 
 This study presents a novel approach to predict thermogravimetric analysis (TGA) values at arbitrary temperatures, including those not directly measured in laboratory experiments. Our methodology combines principles from materials science with advanced statistical learning techniques to create a reliable predictive model with quantified uncertainty.
