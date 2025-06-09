@@ -28,8 +28,8 @@ SHEET_NAMES = {
 }
 
 # Specify which rates have the header in the second row (index 1)
-# Corrected based on our debugging: 10C/min has header in row 1 (index 0)
-RATES_WITH_HEADER_ROW_2 = [20, 50]
+# CORRECTED: All sheets appear to need the header skipped.
+RATES_WITH_HEADER_ROW_2 = [10, 20, 50]
 
 # --- Column Name Standardization ---
 # Define the consistent, internal names we will use after loading.
@@ -44,9 +44,11 @@ STD_COL_DTG_TEMP = 'DTG_percent_per_C'
 # These must be exact matches to the names in the Excel file after stripping whitespace.
 RENAMING_MAPS = {
     10: {
+        # The log showed ['Size', 6.249, 'mg',...]. The real headers should be read now.
+        # Based on previous user input for 10C/min.
         't (min)': STD_COL_TIME,
         'T (°C)': STD_COL_TEMP,
-        'mg': STD_COL_MASS,
+        'mg': STD_COL_MASS, 
         'ATG (%)': STD_COL_ATG,
         'Deriv, Weight (%/min)': STD_COL_DTG_TIME,
         'Deriv, Weight (%/°C)': STD_COL_DTG_TEMP

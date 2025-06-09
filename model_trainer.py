@@ -8,6 +8,7 @@ import joblib
 from sklearn.model_selection import train_test_split, GridSearchCV
 from sklearn.ensemble import RandomForestRegressor
 from sklearn.metrics import r2_score, mean_squared_error
+from sklearn.base import clone # <-- ADDED THIS IMPORT
 import config # Import configurations
 
 def train_and_evaluate_model(all_data):
@@ -63,7 +64,7 @@ def train_and_evaluate_model(all_data):
         print("\nTraining final model on combined train+validation data...")
         X_train_val = pd.concat([X_train, X_val])
         y_train_val = pd.concat([y_train, y_val])
-        final_model = clone(best_model)
+        final_model = clone(best_model) # This line will now work
         final_model.fit(X_train_val, y_train_val)
 
         # --- Evaluation on Test Set ---
@@ -84,6 +85,8 @@ def train_and_evaluate_model(all_data):
 
     except Exception as e:
         print(f"An error occurred during model training: {e}")
+        import traceback
+        traceback.print_exc()
         return None
 
 if __name__ == '__main__':
